@@ -72,29 +72,26 @@ class button():
 		screen.blit(text_img, (self.x + int(self.width / 2) - int(text_len / 2), self.y + 25))
 		return action
 
-def mainmenu():
-    puzzle = button(200, 200, 'Puzzle')
-    generate = button(200, 275, 'Auto Generate')
-    quit = button(200, 350, 'Quit')
+puzzle = button(200, 200, 'Puzzle')
+generate = button(200, 275, 'Auto Generate')
+quit = button(200, 350, 'Quit')
 
 
-    run = True
-    while run:
+run = True
+while run:
+    screen.fill(white)
+        
+    if puzzle.draw_button():
+    	print("insert sudoku puzzle \n")
+    if generate.draw_button():
+    	print('Quit')
+    if quit.draw_button():
+    	pygame.quit()
 
-    	screen.fill(white)
-
-    	if puzzle.draw_button():
-    		print("insert sudoku puzzle \n")
-    	if generate.draw_button():
-    		print('Quit')
-    	if quit.draw_button():
-    		pygame.quit()
-
-
-    	for event in pygame.event.get():
-    		if event.type == pygame.QUIT:
-    			run = False	
+    for event in pygame.event.get():
+    	if event.type == pygame.QUIT:
+    		run = False	
     	
     pygame.display.update()
 
-mainmenu()
+pygame.quit()

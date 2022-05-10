@@ -79,19 +79,19 @@ quit = button(200, 350, 'Quit')
 
 run = True
 while run:
-    screen.fill(white)
-        
-    if puzzle.draw_button():
-    	print("insert sudoku puzzle \n")
-    if generate.draw_button():
-    	print('Quit')
-    if quit.draw_button():
-    	pygame.quit()
+	screen.fill(white)
+		
+	if puzzle.draw_button():
+		print("insert sudoku puzzle \n")
+	if generate.draw_button():
+		print('Quit')
+	if quit.draw_button():
+		pygame.quit()
 
-    for event in pygame.event.get():
-    	if event.type == pygame.QUIT:
-    		run = False	
-    	
-    pygame.display.update()
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			run = False	
+		
+	pygame.display.update()
 
 pygame.quit()

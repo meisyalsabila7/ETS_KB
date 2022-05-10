@@ -1,28 +1,44 @@
 from copy import deepcopy
 from sys import exit
+import sys
 import pygame
 import time
 import random
 pygame.init()
 
 def generate():
-    while True:  
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                exit()
-        board = [[0 for i in range(9)] for j in range(9)]
+    if args != '':
+        puzzleArr = []
+        for i in range(0,81,9):
+            row = []
+            for j in range(1,10):
+                row.append(int(args[i+j-1]))
+            puzzleArr.append(row)
+        notSolved = deepcopy(puzzleArr)
+        if solve(puzzleArr):
+            return notSolved
+        else:
+            print("puzle not solvable exiting...")
+            exit()
+    else :    
+        while True:  
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+            board = [[0 for i in range(9)] for j in range(9)]
 
-        for i in range(9):
-            for j in range(9):
-                if random.randint(1, 10) >= 5:
-                    board[i][j] = random.randint(1, 9) 
-                    if valid(board, (i, j), board[i][j]):
-                        continue
-                    else:
-                        board[i][j] = 0
-        partialBoard = deepcopy(board)  
-        if solve(board):
-            return partialBoard
+            for i in range(9):
+                for j in range(9):
+                    if random.randint(1, 10) >= 5:
+                        board[i][j] = random.randint(1, 9) 
+                        if valid(board, (i, j), board[i][j]):
+                            continue
+                        else:
+                            board[i][j] = 0
+            partialBoard = deepcopy(board)  
+            if solve(board):
+                print(board)
+                return partialBoard
 
 def puzzle():
     sudoku = input("insert sudoku puzzle \n")
@@ -40,29 +56,24 @@ class Board:
         self.board = generate()
         self.solvedBoard = deepcopy(self.board)
         solve(self.solvedBoard)
-        self.tiles = [[Tile(self.board[i][j], window, i * 60, j * 60)
-                      for j in range(9)] for i in range(9)]
+        self.tiles = [[Tile(self.board[i][j], window, i * 60, j * 60) for j in range(9)] for i in range(9)]
         self.window = window
 
     def draw_board(self):
         for i in range(9):
             for j in range(9):
                 if j % 3 == 0 and j != 0:  
-                    pygame.draw.line(self.window, (0, 0, 0), (j // 3
-                            * 180, 0), (j // 3 * 180, 540), 4)
+                    pygame.draw.line(self.window, (0, 0, 0), (j // 3 * 180, 0), (j // 3 * 180, 540), 4)
 
                 if i % 3 == 0 and i != 0: 
-                    pygame.draw.line(self.window, (0, 0, 0), (0, i // 3
-                            * 180), (540, i // 3 * 180), 4)
+                    pygame.draw.line(self.window, (0, 0, 0), (0, i // 3 * 180), (540, i // 3 * 180), 4)
 
                 self.tiles[i][j].draw((0, 0, 0), 1)
 
                 if self.tiles[i][j].value != 0:  
-                    self.tiles[i][j].display(self.tiles[i][j].value,
-                            (21 + j * 60, 16 + i * 60), (0, 0, 0))  
+                    self.tiles[i][j].display(self.tiles[i][j].value, (21 + j * 60, 16 + i * 60), (0, 0, 0))  
 
-        pygame.draw.line(self.window, (0, 0, 0), (0, (i + 1) // 3
-                         * 180), (540, (i + 1) // 3 * 180), 4)
+        pygame.draw.line(self.window, (0, 0, 0), (0, (i + 1) // 3 * 180), (540, (i + 1) // 3 * 180), 4)
 
     def deselect(self, tile):
         for i in range(9):
@@ -214,14 +225,6 @@ def main():
     pygame.display.set_caption('Sudoku Solver with DFS Solution')
     icon = pygame.image.load('assets/thumbnail.png')
     pygame.display.set_icon(icon)
-
-    font = pygame.font.SysFont('Bahnschrift', 40)
-    text = font.render('Generating', True, (0, 0, 0))
-    screen.blit(text, (175, 245))
-
-    font = pygame.font.SysFont('Bahnschrift', 40)
-    text = font.render('Random Grid', True, (0, 0, 0))
-    screen.blit(text, (156, 290))
     pygame.display.flip()
 
     wrong = 0
@@ -326,6 +329,10 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+
+args = ''
+if len(sys.argv) > 1:
+    args = sys.argv[1]
 
 main()
 pygame.quit()
